@@ -1,0 +1,44 @@
+services:
+  # ---------- Postgres: хранилище для auth и order сервисов ----------
+  postgres:
+    image: postgres:16
+    container_name: ecom-postgres
+    ports:
+      - "5432:5432"            # хост:контейнер — снаружи доступен на localhost:5432
+    environment:
+      POSTGRES_USER: ecom
+      POSTGRES_PASSWORD: ecom_pass
+      POSTGRES_DB: postgres     # база по умолчанию; наши создаст init-скрипт
+    volumes:
+      - postgres_data:/var/lib/postgresql/data          # данные переживут перезапуск
+      - ./init-db:/docker-entrypoint-initdb.d           # SQL-скрипты, выполняются при первом старте
+
+  # ---------- Redis: маршрутизация WebSocket-сессий и кэш ----------
+  redis:
+    image: redis:7-alpine
+    container_name: ecom-redis
+    ports:
+      - "6379:6379"
+
+  # ---------- Kafka (KRaft-режим, без Zookeeper) ----------
+  kafka:
+    image: apache/kafka:3.9.1
+    container_name: ecom-kafka
+    ports:
+      - "29092:29092"          # порт для подключения С ХОСТА (из IntelliJ)
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,HOST:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+volumes:
+  postgres_data:
