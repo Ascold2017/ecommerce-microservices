@@ -1,3 +1,9 @@
 # E-commerce Microservices
 
 Учебный проект: auth, order, notification сервисы на Spring Boot + Kafka + Redis + Postgres.
+auth-service - регистрирует и логинит пользователей. 
+order-service - создает заказы и отправляет их в очередь для обработки.
+notification-service - получает заказы из очереди и отправляет уведомления о заказе.
+frontend - простой клиент для взаимодействия с сервисами.
+infrastructure - инфраструктура для развертывания и управления сервисами.
+![img.png](img.png)
