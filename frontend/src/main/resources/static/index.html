@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>E-commerce</title>
+    </head>
+    <body>
+        <h2>Вход</h2>
+        <input id="email" placeholder="email">
+        <input id="password" type="password" placeholder="пароль">
+        <button onclick="login()">Войти</button>
+
+        <h2>Заказ</h2>
+        <input id="product" placeholder="товар">
+        <input id="qty" type="number" value="1">
+        <button onclick="createOrder()">Создать заказ</button>
+
+        <h2>Уведомления</h2>
+        <ul id="messages"></ul>
+
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+        <script>
+            let token = localStorage.getItem('token');
+            if (token) connectWs();
+
+            async function login() {
+                const res = await fetch('http://localhost:8081/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                token = (await res.json()).token;
+                localStorage.setItem('token', token);
+                connectWs();
+            }
+
+            async function createOrder() {
+                await fetch('http://localhost:8082/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        productName: document.getElementById('product').value,
+                        quantity: Number(document.getElementById('qty').value)
+                    })
+                });
+            }
+
+            let stompClient = null;
+            if (token) connectWs();
+
+            function connectWs() {
+                if (stompClient) return;          // уже подключены — выходим
+                stompClient = Stomp.over(new SockJS('http://localhost:8083/ws'));
+                stompClient.connect({ Authorization: 'Bearer ' + token }, () => {
+                    stompClient.subscribe('/user/queue/notifications', (frame) => {
+                        const li = document.createElement('li');
+                        li.textContent = frame.body;
+                        document.getElementById('messages').appendChild(li);
+                    });
+                });
+            }
+        </script>
+    </body>
+</html>
