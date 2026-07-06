@@ -1,0 +1,28 @@
+package com.ecommerce.orderservice.messaging;
+
+import com.ecommerce.orderservice.event.PaymentCompleted;
+import com.ecommerce.orderservice.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class PaymentEventListener {
+
+    private static final Logger log = LoggerFactory.getLogger(PaymentEventListener.class);
+
+    private OrderService orderService;
+
+    public PaymentEventListener(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+
+    @KafkaListener(topics = "payment-events")
+    public void onPaymentCompleted(PaymentCompleted event) {
+        log.info("📩 Получено событие о заказе: orderId={}, userId={}, amount={}",
+                event.orderId(), event.userId(), event.amount());
+        orderService.confirmOrder(event.orderId());
+    }
+}

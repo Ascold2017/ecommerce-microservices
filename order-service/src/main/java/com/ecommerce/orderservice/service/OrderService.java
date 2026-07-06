@@ -6,6 +6,7 @@ import com.ecommerce.orderservice.messaging.OrderEventPublisher;
 import com.ecommerce.orderservice.model.Order;
 import com.ecommerce.orderservice.model.OrderStatus;
 import com.ecommerce.orderservice.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,6 +34,12 @@ public class OrderService {
         orderEventPublisher.publishOrderCreated(OrderCreatedEvent.fromOrder(savedOrder));
 
         return savedOrder;
+    }
+
+    @Transactional
+    public void confirmOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        order.setStatus(OrderStatus.CONFIRMED);   // JPA сам сделает UPDATE на коммите
     }
 
     public List<Order> getAllOrdersForUser(Long userId) {

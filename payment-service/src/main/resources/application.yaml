@@ -1,11 +1,11 @@
 server:
-  port: 8084
+  port: 8086
 
 spring:
   application:
-    name: stock-service
+    name: payment-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/stock_db
+    url: jdbc:postgresql://localhost:5432/payments_db
     username: ecom
     password: ecom_pass
   jpa:
@@ -21,12 +21,12 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
       properties:
-        spring.json.type.mapping: stockReserved:com.ecommerce.stockservice.event.StockReserved
+        spring.json.type.mapping: paymentCompleted:com.ecommerce.paymentservice.event.PaymentCompleted
     consumer:
-      group-id: stock-service
-      auto-offset-reset: latest
+      group-id: payment-service
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
-        "[spring.json.value.default.type]": com.ecommerce.stockservice.event.OrderCreatedEvent
-        "[spring.json.use.type.headers]": false
+        spring.json.type.mapping: stockReserved:com.ecommerce.paymentservice.event.StockReserved
+        spring.json.trusted.packages: com.ecommerce.paymentservice.event
