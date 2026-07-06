@@ -6,7 +6,7 @@ import java.time.Instant;
 
 public record OrderResponse(
         Long id,
-        String productName,
+        Long productId,
         Integer quantity,
         String status,
         Instant createdAt
@@ -15,7 +15,7 @@ public record OrderResponse(
     public static OrderResponse fromOrder(Order order) {
         return new OrderResponse(
                 order.getId(),
-                order.getProductName(),
+                order.getProductId(),
                 order.getQuantity(),
                 order.getStatus().name(),
                 order.getCreatedAt()

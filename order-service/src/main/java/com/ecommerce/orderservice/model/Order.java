@@ -22,8 +22,8 @@ public class Order {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "product_name", nullable = false)
-    private String productName;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;

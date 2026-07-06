@@ -8,7 +8,6 @@ import com.ecommerce.orderservice.model.OrderStatus;
 import com.ecommerce.orderservice.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +25,9 @@ public class OrderService {
     public Order createOrder(Long userId, CreateOrderRequest request) {
         Order order = new Order();
         order.setUserId(userId);
-        order.setProductName(request.productName());
+        order.setProductId(request.productId());
         order.setQuantity(request.quantity());
-        order.setStatus(OrderStatus.CREATED);
+        order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(new Date().toInstant());
         Order savedOrder = orderRepository.save(order);
         orderEventPublisher.publishOrderCreated(OrderCreatedEvent.fromOrder(savedOrder));
