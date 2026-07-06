@@ -13,13 +13,6 @@ services:
       - postgres_data:/var/lib/postgresql/data          # данные переживут перезапуск
       - ./init-db:/docker-entrypoint-initdb.d           # SQL-скрипты, выполняются при первом старте
 
-  # ---------- Redis: маршрутизация WebSocket-сессий и кэш ----------
-  redis:
-    image: redis:7-alpine
-    container_name: ecom-redis
-    ports:
-      - "6379:6379"
-
   # ---------- Kafka (KRaft-режим, без Zookeeper) ----------
   kafka:
     image: apache/kafka:3.9.1
@@ -39,6 +32,16 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+  centrifugo:
+    image: centrifugo/centrifugo:v6.7.0
+    container_name: ecom-centrifugo
+    command: centrifugo -c /centrifugo/config.json
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./centrifugo:/centrifugo
+    ulimits:
+      nofile: { soft: 65536, hard: 65536 }
 
 volumes:
   postgres_data:

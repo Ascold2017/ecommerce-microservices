@@ -14,9 +14,9 @@ spring:
       properties:
         "[spring.json.value.default.type]": com.ecommerce.notificationservice.event.OrderCreatedEvent
         "[spring.json.use.type.headers]": false
-  data:
-    redis:
-      host: localhost
-      port: 6379
-jwt:
-  secret: ${JWT_SECRET:c2VjcmV0LWtleS1mb3ItZWNvbW1lcmNlLWF1dGgtc2VydmljZS1kZXY=}
+
+centrifugo:
+  api-url: http://localhost:8000        # без /api — см. комментарий в клиенте
+  api-key: 4e27bc9a63c75227c490cf94c656ed87
+  token-secret: pQLEUu1GgqnY0Z5fHl29OVpBd364r4zE7wqnFUmFGlE=
+  token-ttl-ms: 3600000

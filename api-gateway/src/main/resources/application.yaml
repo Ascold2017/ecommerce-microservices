@@ -1,0 +1,30 @@
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/auth/**
+            - id: order-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/orders/**
+            - id: notifications-service
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/notifications/**
+            - id: frontend-service
+              uri: http://localhost:8085
+              predicates:
+                - Path=/**
+jwt:
+  secret: ${JWT_SECRET:c2VjcmV0LWtleS1mb3ItZWNvbW1lcmNlLWF1dGgtc2VydmljZS1kZXY=}
+server:
+  port: 8080
+

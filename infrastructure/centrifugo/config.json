@@ -1,0 +1,16 @@
+{
+  "client": {
+    "token": {
+      "hmac_secret_key": "pQLEUu1GgqnY0Z5fHl29OVpBd364r4zE7wqnFUmFGlE="
+    },
+    "allowed_origins": ["http://localhost:8080"]
+  },
+  "http_api": {
+    "key": "4e27bc9a63c75227c490cf94c656ed87"
+  },
+  "channel": {
+    "without_namespace": {
+      "allow_user_limited_channels": true
+    }
+  }
+}

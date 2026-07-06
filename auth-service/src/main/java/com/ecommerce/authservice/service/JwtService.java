@@ -38,12 +38,4 @@ public class JwtService {
                 .signWith(secretKey)                 // подписываем нашим секретом (HS256)
                 .compact();                          // собрать в итоговую строку
     }
-
-    public Claims parseClaims(String token) throws JwtException {
-        return Jwts.parser()
-                .verifyWith(secretKey)          // проверить подпись нашим секретом
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();                  // вернуть claims (sub, email, role, exp...)
-    }
 }
