@@ -5,7 +5,7 @@ import java.time.Instant;
 public record OrderCreatedEvent(
         Long orderId,
         Long userId,
-        String productName,
+        Long productId,
         Integer quantity,
         Instant createdAt
 ) {}

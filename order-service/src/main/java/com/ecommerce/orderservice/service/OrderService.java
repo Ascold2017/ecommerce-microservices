@@ -42,6 +42,12 @@ public class OrderService {
         order.setStatus(OrderStatus.CONFIRMED);   // JPA сам сделает UPDATE на коммите
     }
 
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        order.setStatus(OrderStatus.CANCELLED);
+    }
+
     public List<Order> getAllOrdersForUser(Long userId) {
         return orderRepository.findAllByUserId(userId);
     }

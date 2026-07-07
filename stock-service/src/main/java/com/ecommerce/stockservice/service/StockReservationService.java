@@ -1,6 +1,8 @@
 package com.ecommerce.stockservice.service;
 
 import com.ecommerce.stockservice.event.OrderCreatedEvent;
+import com.ecommerce.stockservice.event.PaymentFailedEvent;
+import com.ecommerce.stockservice.event.StockReservationFailed;
 import com.ecommerce.stockservice.event.StockReserved;
 import com.ecommerce.stockservice.messaging.StockEventPublisher;
 import com.ecommerce.stockservice.model.Product;
@@ -35,7 +37,14 @@ public class StockReservationService {
         Product product = productRepository.findById(event.productId())
                 .orElseThrow(() -> new IllegalStateException("Нет товара id=" + event.productId()));
 
-        // happy-path 3a: считаем, что остатка хватает (в 3c добавим проверку + StockReservationFailed)
+
+        if (product.getAvailableQuantity() < event.quantity()) {
+            eventPublisher.publishStockReservationFailed(
+                    new StockReservationFailed(event.orderId(), event.userId(),
+                            "Недостаточно товара: есть " + product.getAvailableQuantity()
+                                    + ", нужно " + event.quantity()));
+            return;   // выходим штатно, без throw
+        }
         product.setAvailableQuantity(product.getAvailableQuantity() - event.quantity());
 
         StockReservation reservation = new StockReservation();
@@ -54,5 +63,18 @@ public class StockReservationService {
         eventPublisher.publishStockReserved(
                 new StockReserved(event.orderId(), event.userId(),
                         event.productId(), event.quantity(), amount));
+    }
+
+    @Transactional
+    public void release(PaymentFailedEvent event) {
+        StockReservation reservation = reservationRepository.findByOrderId(event.orderId())
+                .orElse(null);
+
+        if (reservation == null || reservation.getStatus() != ReservationStatus.RESERVED) {
+            return;
+        }
+        Product product = productRepository.findById(reservation.getProductId()).orElseThrow();
+        product.setAvailableQuantity(product.getAvailableQuantity() + reservation.getQuantity());
+        reservation.setStatus(ReservationStatus.RELEASED);
     }
 }

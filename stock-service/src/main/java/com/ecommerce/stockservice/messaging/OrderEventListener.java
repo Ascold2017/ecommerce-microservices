@@ -1,6 +1,7 @@
 package com.ecommerce.stockservice.messaging;
 
 import com.ecommerce.stockservice.event.OrderCreatedEvent;
+import com.ecommerce.stockservice.event.PaymentFailedEvent;
 import com.ecommerce.stockservice.service.StockReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,5 +24,12 @@ public class OrderEventListener {
         log.info("📩 Получено событие о заказе: orderId={}, userId={}, productId={}, qty={}",
                 event.orderId(), event.userId(), event.productId(), event.quantity());
         stockReservationService.reserve(event);
+    }
+
+
+    @KafkaListener(topics = "payment-failed-events")
+    public void onPaymentFailed(PaymentFailedEvent event) {
+        log.info("📩 Получено событие о неуспешной оплате: orderId={}", event.orderId());
+        stockReservationService.release(event);
     }
 }

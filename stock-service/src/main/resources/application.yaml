@@ -21,12 +21,13 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
       properties:
-        spring.json.type.mapping: stockReserved:com.ecommerce.stockservice.event.StockReserved
+        spring.json.type.mapping: stockReserved:com.ecommerce.stockservice.event.StockReserved, stockReservationFailed:com.ecommerce.stockservice.event.StockReservationFailed
+        spring.json.trusted.packages: com.ecommerce.stockservice.event
     consumer:
       group-id: stock-service
       auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
-        "[spring.json.value.default.type]": com.ecommerce.stockservice.event.OrderCreatedEvent
-        "[spring.json.use.type.headers]": false
+        spring.json.type.mapping: orderCreated:com.ecommerce.stockservice.event.OrderCreatedEvent,paymentFailed:com.ecommerce.stockservice.event.PaymentFailedEvent
+        spring.json.trusted.packages: com.ecommerce.stockservice.event

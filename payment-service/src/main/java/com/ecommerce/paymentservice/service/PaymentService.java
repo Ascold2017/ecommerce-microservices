@@ -1,19 +1,26 @@
 package com.ecommerce.paymentservice.service;
 
 import com.ecommerce.paymentservice.event.PaymentCompleted;
+import com.ecommerce.paymentservice.event.PaymentFailed;
 import com.ecommerce.paymentservice.event.StockReserved;
 import com.ecommerce.paymentservice.messaging.PaymentEventPublisher;
 import com.ecommerce.paymentservice.model.Payment;
 import com.ecommerce.paymentservice.model.PaymentStatus;
 import com.ecommerce.paymentservice.repository.PaymentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 @Service
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final PaymentEventPublisher eventPublisher;
+
+    @Value("${payment.decline-threshold}")
+    private int declineThreshold;
 
     public PaymentService(PaymentRepository paymentRepository,
                           PaymentEventPublisher eventPublisher) {
@@ -23,14 +30,20 @@ public class PaymentService {
 
     @Transactional
     public void process(StockReserved event) {
-        // эмуляция: в 3b оплата всегда успешна; ветку отказа добавим в 3c
+        boolean declined = event.amount().compareTo(BigDecimal.valueOf(declineThreshold)) >= 0;  // из @Value
+
         Payment payment = new Payment();
         payment.setOrderId(event.orderId());
         payment.setAmount(event.amount());
-        payment.setStatus(PaymentStatus.COMPLETED);
+        payment.setStatus(declined ? PaymentStatus.FAILED : PaymentStatus.COMPLETED);
         paymentRepository.save(payment);
 
-        eventPublisher.publishPaymentCompleted(
-                new PaymentCompleted(event.orderId(), event.userId(), event.amount()));
+        if (declined) {
+            eventPublisher.publishPaymentFailed(new PaymentFailed(
+                    event.orderId(), event.userId(), "Оплата отклонена: сумма " + event.amount()));
+        } else {
+            eventPublisher.publishPaymentCompleted(new PaymentCompleted(
+                    event.orderId(), event.userId(), event.amount()));
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.ecommerce.orderservice.messaging;
 
 import com.ecommerce.orderservice.event.PaymentCompleted;
+import com.ecommerce.orderservice.event.PaymentFailedEvent;
 import com.ecommerce.orderservice.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,5 +25,12 @@ public class PaymentEventListener {
         log.info("📩 Получено событие о заказе: orderId={}, userId={}, amount={}",
                 event.orderId(), event.userId(), event.amount());
         orderService.confirmOrder(event.orderId());
+    }
+
+    @KafkaListener(topics = "payment-failed-events")
+    public void onPaymentFailed(PaymentFailedEvent event) {
+        log.info("📩 Получено событие о неудачном платеже: orderId={}, userId={}, reason={}",
+                event.orderId(), event.userId(), event.reason());
+        orderService.cancelOrder(event.orderId());
     }
 }

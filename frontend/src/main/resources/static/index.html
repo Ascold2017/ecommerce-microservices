@@ -10,10 +10,8 @@
         <input id="password" type="password" placeholder="пароль">
         <button onclick="login()">Войти</button>
 
-        <h2>Заказ</h2>
-        <input id="product" placeholder="товар">
-        <input id="qty" type="number" value="1">
-        <button onclick="createOrder()">Создать заказ</button>
+        <h2>Каталог</h2>
+        <ul id="products"></ul>
 
         <h2>Уведомления</h2>
         <ul id="messages"></ul>
@@ -23,6 +21,21 @@
             let centrifuge = null;
             let appJwt = localStorage.getItem('token');
             if (appJwt) connectWs();
+
+            getProducts();
+
+            async function getProducts() {
+                const res = await fetch('http://localhost:8080/api/stock/products', {
+                    headers: {
+                        'Authorization': `Bearer ${appJwt}`
+                    }
+                });
+
+                const products = await res.json();
+                const productsList = document.getElementById('products');
+                productsList.innerHTML = '';
+                products.forEach(product => renderProduct(product));
+            }
 
             async function login() {
                 const res = await fetch('http://localhost:8080/api/auth/login', {
@@ -38,7 +51,7 @@
                 connectWs();
             }
 
-            async function createOrder() {
+            async function orderProduct(productId, quantity) {
                 await fetch('http://localhost:8080/api/orders', {
                     method: 'POST',
                     headers: {
@@ -46,8 +59,8 @@
                         'Authorization': 'Bearer ' + appJwt
                     },
                     body: JSON.stringify({
-                        productName: document.getElementById('product').value,
-                        quantity: Number(document.getElementById('qty').value)
+                        productId: productId,
+                        quantity: +quantity
                     })
                 });
             }
@@ -71,10 +84,36 @@
                     console.log('уведомление:', ctx.data.message);   // показать в UI
 
                     document.getElementById('messages').innerHTML += ctx.data.message + '<br>';
+
+                    getProducts();
                 });
                 sub.subscribe();
 
                 centrifuge.connect();
+            }
+
+            function renderProduct(item) {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - (осталось ${item.availableQuantity}) $${item.price} `
+
+                const quantityInput = document.createElement('input');
+                quantityInput.type = 'number';
+                quantityInput.min = 1;
+                quantityInput.value = 1;
+                quantityInput.placeholder = 'Количество';
+
+                li.appendChild(quantityInput);
+
+                const orderButton = document.createElement('button');
+                orderButton.textContent = 'Заказать';
+                orderButton.addEventListener('click', () => {
+                    const quantity = parseInt(quantityInput.value);
+                    orderProduct(item.id, quantity);
+                });
+
+                li.appendChild(orderButton);
+
+                products.appendChild(li);
             }
         </script>
     </body>

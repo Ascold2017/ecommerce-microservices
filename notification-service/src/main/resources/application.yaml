@@ -12,8 +12,13 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
-        "[spring.json.value.default.type]": com.ecommerce.notificationservice.event.OrderCreatedEvent
-        "[spring.json.use.type.headers]": false
+        spring.json.type.mapping: >-
+          orderCreated:com.ecommerce.notificationservice.event.OrderCreatedEvent,
+          stockReserved:com.ecommerce.notificationservice.event.StockReserved,
+          paymentCompleted:com.ecommerce.notificationservice.event.PaymentCompleted,
+          stockReservationFailed:com.ecommerce.notificationservice.event.StockReservationFailedEvent,
+          paymentFailed:com.ecommerce.notificationservice.event.PaymentFailed
+        spring.json.trusted.packages: "*"
 
 centrifugo:
   api-url: http://localhost:8000        # без /api — см. комментарий в клиенте
