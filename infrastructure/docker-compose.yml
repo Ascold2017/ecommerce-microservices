@@ -12,8 +12,6 @@ services:
   postgres:
     image: postgres:16
     container_name: ecom-postgres
-    ports:
-      - "5432:5432"            # хост:контейнер — снаружи доступен на localhost:5432
     environment:
       POSTGRES_USER: ecom
       POSTGRES_PASSWORD: ecom_pass
@@ -34,8 +32,6 @@ services:
     image: apache/kafka:3.9.1
     container_name: ecom-kafka
     hostname: kafka
-    ports:
-      - "29092:29092"          # порт для подключения С ХОСТА (из IntelliJ)
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
