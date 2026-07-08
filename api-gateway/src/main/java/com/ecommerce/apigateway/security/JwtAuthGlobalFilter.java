@@ -20,7 +20,8 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
     // пути, которым JWT не нужен — их пропускаем «как есть»
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/auth/register",
-            "/api/auth/login"
+            "/api/auth/login",
+            "/api/stock/products"
     );
 
     private final JwtService jwtService;

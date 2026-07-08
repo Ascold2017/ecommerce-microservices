@@ -1,13 +1,13 @@
 server:
-  port: 8082  # order-service на 8082
+  port: 8082
 
 spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/orders_db
-    username: ecom
-    password: ecom_pass
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/orders_db}
+    username: ${SPRING_DATASOURCE_USERNAME:ecom}
+    password: ${SPRING_DATASOURCE_PASSWORD:ecom_pass}
   jpa:
     open-in-view: false
     hibernate:
@@ -16,7 +16,7 @@ spring:
     properties:
       hibernate.format_sql: true
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer

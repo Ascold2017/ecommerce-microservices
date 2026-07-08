@@ -5,9 +5,9 @@ spring:
   application:
     name: auth-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth_db
-    username: ecom
-    password: ecom_pass
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/auth_db}
+    username: ${SPRING_DATASOURCE_USERNAME:ecom}
+    password: ${SPRING_DATASOURCE_PASSWORD:ecom_pass}
   jpa:
     open-in-view: false
     hibernate:

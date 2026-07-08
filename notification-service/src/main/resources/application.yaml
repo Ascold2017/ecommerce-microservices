@@ -1,11 +1,12 @@
 server:
-  port: 8083                       # третий сервис на 8083
+  port: 8083
 
 spring:
   application:
     name: notification-service
   kafka:
-    bootstrap-servers: localhost:29092
+    # Используем переменную со значением по умолчанию для локального запуска
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
     consumer:
       group-id: notification-service
       auto-offset-reset: earliest
@@ -21,7 +22,8 @@ spring:
         spring.json.trusted.packages: "*"
 
 centrifugo:
-  api-url: http://localhost:8000        # без /api — см. комментарий в клиенте
+  # Направляем на контейнер centrifugo
+  api-url: ${CENTRIFUGO_API_URL:http://localhost:8000}
   api-key: 4e27bc9a63c75227c490cf94c656ed87
   token-secret: pQLEUu1GgqnY0Z5fHl29OVpBd364r4zE7wqnFUmFGlE=
   token-ttl-ms: 3600000
