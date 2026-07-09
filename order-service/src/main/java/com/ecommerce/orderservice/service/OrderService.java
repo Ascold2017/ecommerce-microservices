@@ -1,7 +1,7 @@
 package com.ecommerce.orderservice.service;
 
 import com.ecommerce.orderservice.dto.CreateOrderRequest;
-import com.ecommerce.orderservice.event.OrderCreatedEvent;
+import com.ecommerce.core.event.OrderCreatedEvent;
 import com.ecommerce.orderservice.messaging.OrderEventPublisher;
 import com.ecommerce.orderservice.model.Order;
 import com.ecommerce.orderservice.model.OrderStatus;
@@ -31,7 +31,9 @@ public class OrderService {
         order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(new Date().toInstant());
         Order savedOrder = orderRepository.save(order);
-        orderEventPublisher.publishOrderCreated(OrderCreatedEvent.fromOrder(savedOrder));
+
+        var event = new OrderCreatedEvent(savedOrder.getId(), userId, savedOrder.getProductId(), savedOrder.getQuantity(), savedOrder.getCreatedAt());
+        orderEventPublisher.publishOrderCreated(event);
 
         return savedOrder;
     }

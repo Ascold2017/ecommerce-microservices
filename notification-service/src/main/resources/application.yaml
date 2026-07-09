@@ -14,11 +14,11 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
         spring.json.type.mapping: >-
-          orderCreated:com.ecommerce.notificationservice.event.OrderCreatedEvent,
-          stockReserved:com.ecommerce.notificationservice.event.StockReserved,
-          paymentCompleted:com.ecommerce.notificationservice.event.PaymentCompleted,
-          stockReservationFailed:com.ecommerce.notificationservice.event.StockReservationFailedEvent,
-          paymentFailed:com.ecommerce.notificationservice.event.PaymentFailed
+          orderCreated:com.ecommerce.core.event.OrderCreatedEvent,
+          stockReserved:com.ecommerce.core.event.StockReserved,
+          paymentCompleted:com.ecommerce.core.event.PaymentCompleted,
+          stockReservationFailed:com.ecommerce.core.event.StockReservationFailedEvent,
+          paymentFailed:com.ecommerce.core.event.PaymentFailed
         spring.json.trusted.packages: "*"
 
 centrifugo:

@@ -1,6 +1,6 @@
 package com.ecommerce.notificationservice.messaging;
 
-import com.ecommerce.notificationservice.event.*;
+import com.ecommerce.core.event.*;
 import com.ecommerce.notificationservice.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

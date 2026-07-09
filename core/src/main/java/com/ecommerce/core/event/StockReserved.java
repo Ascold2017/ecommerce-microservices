@@ -1,4 +1,4 @@
-package com.ecommerce.stockservice.event;
+package com.ecommerce.core.event;
 
 import java.math.BigDecimal;
 

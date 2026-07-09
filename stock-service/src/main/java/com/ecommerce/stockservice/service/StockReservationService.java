@@ -1,9 +1,9 @@
 package com.ecommerce.stockservice.service;
 
-import com.ecommerce.stockservice.event.OrderCreatedEvent;
-import com.ecommerce.stockservice.event.PaymentFailedEvent;
-import com.ecommerce.stockservice.event.StockReservationFailed;
-import com.ecommerce.stockservice.event.StockReserved;
+import com.ecommerce.core.event.OrderCreatedEvent;
+import com.ecommerce.core.event.PaymentFailed;
+import com.ecommerce.core.event.StockReservationFailedEvent;
+import com.ecommerce.core.event.StockReserved;
 import com.ecommerce.stockservice.messaging.StockEventPublisher;
 import com.ecommerce.stockservice.model.Product;
 import com.ecommerce.stockservice.model.ReservationStatus;
@@ -40,7 +40,7 @@ public class StockReservationService {
 
         if (product.getAvailableQuantity() < event.quantity()) {
             eventPublisher.publishStockReservationFailed(
-                    new StockReservationFailed(event.orderId(), event.userId(),
+                    new StockReservationFailedEvent(event.orderId(), event.userId(),
                             "Недостаточно товара: есть " + product.getAvailableQuantity()
                                     + ", нужно " + event.quantity()));
             return;   // выходим штатно, без throw
@@ -66,7 +66,7 @@ public class StockReservationService {
     }
 
     @Transactional
-    public void release(PaymentFailedEvent event) {
+    public void release(PaymentFailed event) {
         StockReservation reservation = reservationRepository.findByOrderId(event.orderId())
                 .orElse(null);
 

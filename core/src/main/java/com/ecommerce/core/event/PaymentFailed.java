@@ -1,7 +1,4 @@
-package com.ecommerce.paymentservice.event;
-
-import java.math.BigDecimal;
+package com.ecommerce.core.event;
 
 public record PaymentFailed(Long orderId, Long userId, String reason) {
 }
-

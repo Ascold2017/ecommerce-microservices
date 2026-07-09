@@ -29,5 +29,5 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
-        spring.json.type.mapping: orderCreated:com.ecommerce.stockservice.event.OrderCreatedEvent,paymentFailed:com.ecommerce.stockservice.event.PaymentFailedEvent
-        spring.json.trusted.packages: com.ecommerce.stockservice.event
+        spring.json.type.mapping: orderCreated:com.ecommerce.core.event.OrderCreatedEvent,paymentFailed:com.ecommerce.core.event.PaymentFailed
+        spring.json.trusted.packages: com.ecommerce.core.event

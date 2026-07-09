@@ -1,6 +1,6 @@
 package com.ecommerce.orderservice.messaging;
 
-import com.ecommerce.orderservice.event.StockReservationFailedEvent;
+import com.ecommerce.core.event.StockReservationFailedEvent;
 import com.ecommerce.orderservice.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

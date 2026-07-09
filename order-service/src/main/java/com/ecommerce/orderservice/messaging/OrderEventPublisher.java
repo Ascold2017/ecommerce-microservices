@@ -1,6 +1,6 @@
 package com.ecommerce.orderservice.messaging;
 
-import com.ecommerce.orderservice.event.OrderCreatedEvent;
+import com.ecommerce.core.event.OrderCreatedEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 

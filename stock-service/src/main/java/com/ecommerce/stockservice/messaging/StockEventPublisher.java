@@ -1,7 +1,7 @@
 package com.ecommerce.stockservice.messaging;
 
-import com.ecommerce.stockservice.event.StockReservationFailed;
-import com.ecommerce.stockservice.event.StockReserved;
+import com.ecommerce.core.event.StockReservationFailedEvent;
+import com.ecommerce.core.event.StockReserved;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 public class StockEventPublisher {
 
     private final KafkaTemplate<String, StockReserved> kafkaTemplate;
-    private final KafkaTemplate<String, StockReservationFailed> failedEventsKafkaTemplate;
+    private final KafkaTemplate<String, StockReservationFailedEvent> failedEventsKafkaTemplate;
 
     public StockEventPublisher(KafkaTemplate<String, StockReserved> kafkaTemplate,
-                                KafkaTemplate<String, StockReservationFailed> failedEventsKafkaTemplate) {
+                                KafkaTemplate<String, StockReservationFailedEvent> failedEventsKafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
         this.failedEventsKafkaTemplate = failedEventsKafkaTemplate;
     }
@@ -21,7 +21,7 @@ public class StockEventPublisher {
         kafkaTemplate.send("stock-events", String.valueOf(event.userId()), event);
     }
 
-    public void publishStockReservationFailed(StockReservationFailed event) {
+    public void publishStockReservationFailed(StockReservationFailedEvent event) {
         failedEventsKafkaTemplate.send("stock-failed-events", String.valueOf(event.userId()), event);
     }
 }

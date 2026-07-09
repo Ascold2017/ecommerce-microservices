@@ -1,8 +1,8 @@
 package com.ecommerce.paymentservice.service;
 
-import com.ecommerce.paymentservice.event.PaymentCompleted;
-import com.ecommerce.paymentservice.event.PaymentFailed;
-import com.ecommerce.paymentservice.event.StockReserved;
+import com.ecommerce.core.event.PaymentCompleted;
+import com.ecommerce.core.event.PaymentFailed;
+import com.ecommerce.core.event.StockReserved;
 import com.ecommerce.paymentservice.messaging.PaymentEventPublisher;
 import com.ecommerce.paymentservice.model.Payment;
 import com.ecommerce.paymentservice.model.PaymentStatus;

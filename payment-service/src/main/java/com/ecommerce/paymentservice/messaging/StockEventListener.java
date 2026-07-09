@@ -1,6 +1,6 @@
 package com.ecommerce.paymentservice.messaging;
 
-import com.ecommerce.paymentservice.event.StockReserved;
+import com.ecommerce.core.event.StockReserved;
 import com.ecommerce.paymentservice.service.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

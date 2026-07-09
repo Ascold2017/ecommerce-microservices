@@ -1,7 +1,8 @@
 package com.ecommerce.notificationservice.service;
 
+import com.ecommerce.core.event.*;
+
 import com.ecommerce.notificationservice.centrifugo.CentrifugoClient;
-import com.ecommerce.notificationservice.event.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
