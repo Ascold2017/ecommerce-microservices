@@ -1,5 +1,6 @@
 package com.ecommerce.authservice.controller;
 
+import com.ecommerce.authservice.converter.UserAuthConverter;
 import com.ecommerce.authservice.dto.AuthResponse;
 import com.ecommerce.authservice.dto.LoginRequest;
 import com.ecommerce.authservice.dto.RegisterRequest;
@@ -24,7 +25,7 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse register(@Valid @RequestBody RegisterRequest request) {
-        final User user = authService.register(request);
+        final User user = authService.register(UserAuthConverter.convertToModel(request));
         return UserResponse.fromUser(user);
     }
 

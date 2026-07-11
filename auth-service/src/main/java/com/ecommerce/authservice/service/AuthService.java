@@ -8,6 +8,7 @@ import com.ecommerce.authservice.exception.UserNotFoundException;
 import com.ecommerce.authservice.model.User;
 import com.ecommerce.authservice.model.UserRole;
 import com.ecommerce.authservice.repository.UserRepository;
+import com.ecommerce.authservice.service.model.RegisterUserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public User register(RegisterRequest request) {
+    public User register(RegisterUserModel request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
