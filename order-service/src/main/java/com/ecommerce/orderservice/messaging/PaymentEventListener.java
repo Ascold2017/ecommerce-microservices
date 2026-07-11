@@ -3,22 +3,19 @@ package com.ecommerce.orderservice.messaging;
 import com.ecommerce.core.event.PaymentCompleted;
 import com.ecommerce.core.event.PaymentFailed;
 import com.ecommerce.orderservice.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class PaymentEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(PaymentEventListener.class);
 
-    private OrderService orderService;
-
-    public PaymentEventListener(OrderService orderService) {
-        this.orderService = orderService;
-    }
-
+    private final OrderService orderService;
 
     @KafkaListener(topics = "payment-events")
     public void onPaymentCompleted(PaymentCompleted event) {

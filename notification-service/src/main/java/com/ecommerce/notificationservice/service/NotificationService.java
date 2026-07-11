@@ -3,20 +3,17 @@ package com.ecommerce.notificationservice.service;
 import com.ecommerce.core.event.*;
 
 import com.ecommerce.notificationservice.centrifugo.CentrifugoClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Service
+@RequiredArgsConstructor
 public class NotificationService {
 
     public static final String CHANNEL_PREFIX = "notifications#";
 
     private final CentrifugoClient centrifugoClient;
-
-    public NotificationService(CentrifugoClient centrifugoClient) {
-        this.centrifugoClient = centrifugoClient;
-    }
 
     public void notifyOrderCreated(OrderCreatedEvent event) {
         String text = "🛒 Ваш заказ создан: #" + event.productId()
