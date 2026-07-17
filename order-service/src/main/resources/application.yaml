@@ -21,14 +21,14 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
       properties:
-        spring.json.type.mapping: orderCreated:com.ecommerce.core.event.OrderCreatedEvent
+        spring.json.type.mapping: orderCreated:com.ecommerce.core.event.OrderCreatedEvent,processPaymentCommand:com.ecommerce.core.command.ProcessPaymentCommand,releaseStockCommand:com.ecommerce.core.command.ReleaseStockCommand
     consumer:
       group-id: order-service
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
-        spring.json.type.mapping: paymentCompleted:com.ecommerce.core.event.PaymentCompleted,stockReservationFailed:com.ecommerce.core.event.StockReservationFailedEvent,paymentFailed:com.ecommerce.core.event.PaymentFailed
-        spring.json.trusted.packages: com.ecommerce.core.event
+        spring.json.type.mapping: paymentCompleted:com.ecommerce.core.event.PaymentCompleted,stockReservationFailed:com.ecommerce.core.event.StockReservationFailedEvent,paymentFailed:com.ecommerce.core.event.PaymentFailed,stockReserved:com.ecommerce.core.event.StockReserved
+        spring.json.trusted.packages: com.ecommerce.core.event,com.ecommerce.core.command
 
 orders.events.topic.name: orders-events
 stock.commands.topic.name: stock-commands
