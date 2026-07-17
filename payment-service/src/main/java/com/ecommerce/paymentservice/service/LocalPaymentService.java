@@ -1,6 +1,6 @@
 package com.ecommerce.paymentservice.service;
 
-import com.ecommerce.core.event.StockReserved;
+import com.ecommerce.core.command.ProcessPaymentCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LocalPaymentService implements PaymentService {
 
-    public void process(StockReserved event) {
+    public void process(ProcessPaymentCommand command) {
         log.info("payment processing");
     }
 }

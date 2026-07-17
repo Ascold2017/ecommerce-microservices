@@ -1,8 +1,8 @@
 package com.ecommerce.paymentservice.service;
 
+import com.ecommerce.core.command.ProcessPaymentCommand;
 import com.ecommerce.core.event.PaymentCompleted;
 import com.ecommerce.core.event.PaymentFailed;
-import com.ecommerce.core.event.StockReserved;
 import com.ecommerce.paymentservice.messaging.PaymentEventPublisher;
 import com.ecommerce.paymentservice.model.Payment;
 import com.ecommerce.paymentservice.model.PaymentStatus;
@@ -24,21 +24,21 @@ public class DefaultPaymentService implements PaymentService {
     private int declineThreshold;
 
     @Transactional
-    public void process(StockReserved event) {
-        boolean declined = event.amount().compareTo(BigDecimal.valueOf(declineThreshold)) >= 0;  // из @Value
+    public void process(ProcessPaymentCommand command) {
+        boolean declined = command.amount().compareTo(BigDecimal.valueOf(declineThreshold)) >= 0;  // из @Value
 
         Payment payment = new Payment();
-        payment.setOrderId(event.orderId());
-        payment.setAmount(event.amount());
+        payment.setOrderId(command.orderId());
+        payment.setAmount(command.amount());
         payment.setStatus(declined ? PaymentStatus.FAILED : PaymentStatus.COMPLETED);
         paymentRepository.save(payment);
 
         if (declined) {
             eventPublisher.publishPaymentFailed(new PaymentFailed(
-                    event.orderId(), event.userId(), "Оплата отклонена: сумма " + event.amount()));
+                    command.orderId(), command.userId(), "Оплата отклонена: сумма " + command.amount()));
         } else {
             eventPublisher.publishPaymentCompleted(new PaymentCompleted(
-                    event.orderId(), event.userId(), event.amount()));
+                    command.orderId(), command.userId(), command.amount()));
         }
     }
 }

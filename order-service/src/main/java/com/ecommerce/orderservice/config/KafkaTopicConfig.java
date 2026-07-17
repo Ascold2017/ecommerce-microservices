@@ -15,4 +15,20 @@ public class KafkaTopicConfig {
                 .replicas(1)
                 .build();
     }
+
+    @Bean
+    public NewTopic paymentCommandsTopic() {
+        return TopicBuilder.name("payment-commands")
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic stockCommandsTopic() {
+        return TopicBuilder.name("stock-commands")
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
 }

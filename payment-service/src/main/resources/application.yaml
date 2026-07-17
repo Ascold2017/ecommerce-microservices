@@ -29,6 +29,6 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
-        spring.json.type.mapping: stockReserved:com.ecommerce.core.event.StockReserved
-        spring.json.trusted.packages: com.ecommerce.core.event
+        spring.json.type.mapping: processPaymentCommand:com.ecommerce.core.command.ProcessPaymentCommand
+        spring.json.trusted.packages: com.ecommerce.core.command
 payment.decline-threshold: 1000

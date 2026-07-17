@@ -1,7 +1,7 @@
 package com.ecommerce.stockservice.service;
 
+import com.ecommerce.core.command.ReleaseStockCommand;
 import com.ecommerce.core.event.OrderCreatedEvent;
-import com.ecommerce.core.event.PaymentFailed;
 import com.ecommerce.core.event.StockReservationFailedEvent;
 import com.ecommerce.core.event.StockReserved;
 import com.ecommerce.stockservice.messaging.StockEventPublisher;
@@ -66,8 +66,8 @@ public class StockReservationService {
     }
 
     @Transactional
-    public void release(PaymentFailed event) {
-        StockReservation reservation = reservationRepository.findByOrderId(event.orderId())
+    public void release(ReleaseStockCommand command) {
+        StockReservation reservation = reservationRepository.findByOrderId(command.orderId())
                 .orElse(null);
 
         if (reservation == null || reservation.getStatus() != ReservationStatus.RESERVED) {

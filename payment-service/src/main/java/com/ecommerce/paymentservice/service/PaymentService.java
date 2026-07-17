@@ -1,6 +1,6 @@
 package com.ecommerce.paymentservice.service;
 
-import com.ecommerce.core.event.StockReserved;
+import com.ecommerce.core.command.ProcessPaymentCommand;
 
 /**
  * @author Yurii Miedviediev
@@ -8,5 +8,5 @@ import com.ecommerce.core.event.StockReserved;
  * @since 11/07/2026
  */
 public interface PaymentService {
-    void process(StockReserved event);
+    void process(ProcessPaymentCommand command);
 }
